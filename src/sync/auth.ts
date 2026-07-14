@@ -7,7 +7,7 @@
  *
  * The client ID is public by design (an identifier, not a secret).
  */
-const DEFAULT_CLIENT_ID = 'REPLACE_WITH_CLIENT_ID.apps.googleusercontent.com'
+const DEFAULT_CLIENT_ID = '50215456540-dlm6lcnqutni38dkjfgo4ihf02vluqq6.apps.googleusercontent.com'
 export const SCOPE = 'https://www.googleapis.com/auth/drive.file'
 
 export function clientId(): string {
