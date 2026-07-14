@@ -31,5 +31,6 @@ export default defineConfig({
   ],
   test: {
     environment: 'node',
+    include: ['src/**/*.test.ts'], // e2e/ belongs to Playwright, not vitest
   },
 })

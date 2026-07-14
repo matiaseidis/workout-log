@@ -28,6 +28,8 @@ jobs:
       - run: npm ci
       - run: npm test
       - run: npm run build
+      - run: npx playwright install --with-deps chromium
+      - run: npx playwright test --project=mobile-chromium
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

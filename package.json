@@ -8,6 +8,7 @@
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
     "test": "vitest run",
+    "e2e": "npm run build && playwright test",
     "gen-icons": "node scripts/gen-icons.mjs"
   },
   "dependencies": {
@@ -17,7 +18,9 @@
     "wouter-preact": "^3.3.5"
   },
   "devDependencies": {
+    "@playwright/test": "^1.61.1",
     "@preact/preset-vite": "^2.9.4",
+    "@types/node": "^26.1.1",
     "fake-indexeddb": "^6.0.0",
     "typescript": "~5.7.3",
     "vite": "^6.1.0",
