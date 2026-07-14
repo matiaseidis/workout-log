@@ -156,6 +156,19 @@ button.card:disabled { opacity: 0.55; cursor: default; }
   padding: 0 16px; cursor: pointer; font-size: 1rem;
 }
 
+.installhint {
+  position: relative;
+  background: var(--surface); border: 1px dashed var(--accent); border-radius: 16px;
+  padding: 14px 40px 14px 16px;
+}
+.installhint .t { font-weight: 700; font-size: 0.95rem; color: var(--accent); }
+.installhint .m { color: var(--ink2); font-size: 0.85rem; margin-top: 4px; line-height: 1.5; }
+.installhint .dismiss {
+  position: absolute; top: 6px; right: 6px;
+  font: inherit; border: none; background: none; color: var(--ink2);
+  cursor: pointer; font-size: 0.95rem; padding: 8px;
+}
+
 .banner { background: var(--warn-bg); border-radius: 16px; padding: 14px 16px; }
 .banner .t { color: var(--warn-ink); font-weight: 700; font-size: 0.95rem; }
 .banner .m { color: var(--warn-ink); font-size: 0.82rem; margin-top: 2px; opacity: 0.85; }

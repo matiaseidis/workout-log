@@ -5,6 +5,7 @@ import type { Routine } from '../../db/types'
 import { discardSession, startSession } from '../../domain/session'
 import { useProfile } from '../../hooks/useProfile'
 import { fmtDate } from '../format'
+import { InstallHint } from '../components/InstallHint'
 import { SyncBadge } from '../components/SyncBadge'
 import { Tabs } from '../components/Tabs'
 
@@ -38,6 +39,7 @@ export function PickWorkout() {
         {profile && <span class="sub">{profile.name}</span>}
       </div>
       <div class="content">
+        <InstallHint />
         {inProgress && (
           <div class="banner">
             <div class="t">⚠ {inProgress.routineName} — in progress</div>
