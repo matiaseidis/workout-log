@@ -303,6 +303,66 @@ input.exname {
 }
 .chartbox svg { width: 100%; height: auto; display: block; }
 
+/* ---------- celebration ---------- */
+.celebrate {
+  flex: 1; position: relative; overflow: hidden;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 16px; padding: 24px 18px calc(24px + env(safe-area-inset-bottom));
+  min-height: 100dvh;
+}
+.celebrate h1 { font-size: 1.65rem; letter-spacing: -0.02em; margin: 0; text-align: center; z-index: 2; }
+.celebrate .sub { color: var(--ink2); margin: 0; text-align: center; font-size: 0.95rem; z-index: 2; }
+.celebrate .btn { z-index: 2; min-width: 200px; }
+.confetti { position: absolute; inset: 0; pointer-events: none; overflow: hidden; z-index: 1; }
+.confetti i {
+  position: absolute; top: -3vh; display: block;
+  width: 9px; height: 14px; border-radius: 2px;
+  animation: confetti-fall linear infinite;
+}
+@keyframes confetti-fall {
+  to { transform: translateY(105vh) rotate(720deg); }
+}
+.rays {
+  position: absolute; width: 150vmax; height: 150vmax; z-index: 0; border-radius: 50%;
+  background: repeating-conic-gradient(#e4b13c 0deg 9deg, transparent 9deg 24deg);
+  opacity: 0.13;
+  animation: rays-spin 26s linear infinite;
+}
+@keyframes rays-spin { to { transform: rotate(360deg); } }
+.medalwrap {
+  z-index: 2; display: flex; flex-direction: column; align-items: center;
+  animation: medal-drop 0.6s cubic-bezier(0.2, 1.4, 0.4, 1);
+}
+@keyframes medal-drop { from { transform: translateY(-60vh); } to { transform: none; } }
+.ribbon {
+  width: 0; height: 0; border-left: 34px solid transparent; border-right: 34px solid transparent;
+  border-top: 74px solid var(--accent); margin-bottom: -26px;
+}
+.medal {
+  width: min(62vw, 260px); height: min(62vw, 260px); border-radius: 50%;
+  border: 10px solid #e4b13c; overflow: hidden; background: var(--surface);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.35), inset 0 0 0 4px rgba(255, 255, 255, 0.35);
+  animation: medal-swing 3.4s 0.6s ease-in-out infinite;
+  transform-origin: 50% -60px;
+}
+@keyframes medal-swing {
+  0%, 100% { transform: rotate(2.4deg); }
+  50% { transform: rotate(-2.4deg); }
+}
+.medal img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 32%; display: block; }
+.stamp {
+  z-index: 2; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; font-size: 0.78rem;
+  color: #b8901f; border: 2px solid #b8901f; border-radius: 8px; padding: 6px 12px;
+  transform: rotate(-4deg);
+}
+@media (prefers-color-scheme: dark) {
+  .stamp { color: #e4b13c; border-color: #e4b13c; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .confetti { display: none; }
+  .rays, .medal, .medalwrap { animation: none; }
+}
+
 .setup-hero { text-align: center; padding: 56px 24px 12px; }
 .setup-hero .logo {
   width: 72px; height: 72px; border-radius: 18px; margin: 0 auto 16px;

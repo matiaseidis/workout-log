@@ -53,6 +53,10 @@ export async function checkAllSets(page: Page) {
 
 export async function markDone(page: Page) {
   await page.getByRole('button', { name: 'Mark workout done' }).click()
+  // celebration screen first: medal photo + confetti, then continue to summary
+  await expect(page.getByText('Certified good workout')).toBeVisible()
+  await expect(page.locator('.medal img')).toBeVisible()
+  await page.getByRole('button', { name: 'Continue', exact: true }).click()
   await expect(page.getByText('Session is frozen')).toBeVisible()
 }
 

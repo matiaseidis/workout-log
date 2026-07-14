@@ -2,6 +2,7 @@ import { Route, Router, Switch } from 'wouter-preact'
 import { useHashLocation } from 'wouter-preact/use-hash-location'
 import { useProfile } from './hooks/useProfile'
 import { ActiveSession } from './ui/screens/ActiveSession'
+import { Celebrate } from './ui/screens/Celebrate'
 import { Charts } from './ui/screens/Charts'
 import { History } from './ui/screens/History'
 import { Peek } from './ui/screens/Peek'
@@ -33,6 +34,7 @@ export function App() {
           <Route path="/routine/:id">{(p) => <RoutineEditor id={p!.id} />}</Route>
           <Route path="/session/:id/peek/:peekId">{(p) => <Peek id={p!.id} peekId={p!.peekId} />}</Route>
           <Route path="/session/:id">{(p) => <ActiveSession id={p!.id} />}</Route>
+          <Route path="/celebrate/:id">{(p) => <Celebrate id={p!.id} />}</Route>
           <Route path="/summary/:id">{(p) => <Summary id={p!.id} />}</Route>
           <Route path="/history">{() => <History />}</Route>
           <Route path="/detail/:id">{(p) => <SessionDetail id={p!.id} />}</Route>

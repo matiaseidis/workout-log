@@ -46,7 +46,7 @@ export function ActiveSession({ id }: { id: string }) {
 
   const finish = async () => {
     await markDone(id)
-    nav(`/summary/${id}`)
+    nav(`/celebrate/${id}`)
   }
 
   return (

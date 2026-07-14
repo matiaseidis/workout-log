@@ -26,6 +26,8 @@ export default defineConfig({
       },
       workbox: {
         navigateFallback: '/workout-log/index.html',
+        // include images so the celebration photos work offline
+        globPatterns: ['**/*.{js,css,html,png,jpg,svg,webmanifest}'],
       },
     }),
   ],
