@@ -1,0 +1,756 @@
+<title>Laura — Workout Tracker Mockup</title>
+<style>
+  :root {
+    --bg: #eef0f3;
+    --surface: #ffffff;
+    --surface2: #f5f6f8;
+    --ink: #16191e;
+    --ink2: #5c6470;
+    --line: #dde1e7;
+    --accent: #2757d6;
+    --accent-press: #1f46b0;
+    --on-accent: #ffffff;
+    --good: #1e8e4e;
+    --good-bg: #e6f4ec;
+    --warn-ink: #8a5a00;
+    --warn-bg: #fff3dd;
+    --danger: #c6373c;
+    --bezel: #05070a;
+    --shadow: 0 24px 60px rgba(22, 25, 30, .18);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0e1116;
+      --surface: #171c24;
+      --surface2: #1f2530;
+      --ink: #e9ecf1;
+      --ink2: #99a2b0;
+      --line: #2a313d;
+      --accent: #5d87f5;
+      --accent-press: #3d68e8;
+      --on-accent: #ffffff;
+      --good: #46c282;
+      --good-bg: #1b3226;
+      --warn-ink: #f0b35c;
+      --warn-bg: #35280f;
+      --danger: #e4646a;
+      --shadow: 0 24px 60px rgba(0, 0, 0, .5);
+    }
+  }
+  :root[data-theme="light"] {
+    --bg: #eef0f3; --surface: #ffffff; --surface2: #f5f6f8; --ink: #16191e;
+    --ink2: #5c6470; --line: #dde1e7; --accent: #2757d6; --accent-press: #1f46b0;
+    --on-accent: #ffffff; --good: #1e8e4e; --good-bg: #e6f4ec; --warn-ink: #8a5a00;
+    --warn-bg: #fff3dd; --danger: #c6373c; --shadow: 0 24px 60px rgba(22,25,30,.18);
+  }
+  :root[data-theme="dark"] {
+    --bg: #0e1116; --surface: #171c24; --surface2: #1f2530; --ink: #e9ecf1;
+    --ink2: #99a2b0; --line: #2a313d; --accent: #5d87f5; --accent-press: #3d68e8;
+    --on-accent: #ffffff; --good: #46c282; --good-bg: #1b3226; --warn-ink: #f0b35c;
+    --warn-bg: #35280f; --danger: #e4646a; --shadow: 0 24px 60px rgba(0,0,0,.5);
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .stage {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+    padding: 32px 16px 64px;
+  }
+  .stage-head { text-align: center; max-width: 40rem; }
+  .stage-head h1 { font-size: 1.35rem; margin: 0 0 4px; letter-spacing: -.01em; }
+  .stage-head p { margin: 0; color: var(--ink2); font-size: .9rem; line-height: 1.5; }
+
+  .jump {
+    display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; max-width: 34rem;
+  }
+  .jump button {
+    font: inherit; font-size: .8rem; padding: 6px 12px; border-radius: 999px;
+    border: 1px solid var(--line); background: var(--surface); color: var(--ink2);
+    cursor: pointer;
+  }
+  .jump button.on { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+  .jump button:focus-visible, .phone button:focus-visible, .phone input:focus-visible, .phone select:focus-visible {
+    outline: 2px solid var(--accent); outline-offset: 2px;
+  }
+
+  /* ---------- phone frame ---------- */
+  .phone {
+    width: min(392px, calc(100vw - 24px));
+    background: var(--bezel);
+    border-radius: 52px;
+    padding: 12px;
+    box-shadow: var(--shadow);
+    flex-shrink: 0;
+  }
+  .viewport {
+    position: relative;
+    background: var(--bg);
+    border-radius: 42px;
+    overflow: hidden;
+    height: 740px;
+    display: flex;
+    flex-direction: column;
+  }
+  .statusbar {
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 26px 6px;
+    font-size: .78rem; font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+  .notch {
+    position: absolute; top: 10px; left: 50%; transform: translateX(-50%);
+    width: 110px; height: 26px; border-radius: 999px; background: var(--bezel);
+  }
+  .screen {
+    flex: 1; overflow-y: auto; overflow-x: hidden;
+    display: flex; flex-direction: column;
+    scrollbar-width: none;
+  }
+  .screen::-webkit-scrollbar { display: none; }
+  .homebar {
+    flex-shrink: 0; padding: 6px 0 8px; display: flex; justify-content: center;
+  }
+  .homebar i { display: block; width: 120px; height: 5px; border-radius: 999px; background: var(--ink); opacity: .35; }
+
+  /* ---------- in-app primitives ---------- */
+  .appbar {
+    padding: 10px 18px 4px;
+    display: grid; grid-template-columns: 64px 1fr 64px; align-items: center;
+  }
+  .appbar .title { text-align: center; font-weight: 700; font-size: 1.02rem; letter-spacing: -.01em; }
+  .appbar .sub { text-align: center; grid-column: 2; color: var(--ink2); font-size: .78rem; margin-top: 1px; }
+  .backbtn {
+    justify-self: start; font: inherit; font-size: .92rem; color: var(--accent);
+    background: none; border: none; padding: 8px 4px; cursor: pointer;
+  }
+  .pill {
+    justify-self: end; font-size: .72rem; font-weight: 600; padding: 4px 10px;
+    border-radius: 999px; border: 1px solid var(--line); background: var(--surface);
+    color: var(--ink2); white-space: nowrap; cursor: pointer; font-family: inherit;
+  }
+  .pill.good { color: var(--good); border-color: transparent; background: var(--good-bg); }
+  .pill.warn { color: var(--warn-ink); border-color: transparent; background: var(--warn-bg); }
+
+  .instnav {
+    margin: 8px 18px 0;
+    display: grid; grid-template-columns: 44px 1fr 44px; align-items: center;
+    background: var(--surface2); border: 1px solid var(--line); border-radius: 12px;
+    padding: 2px;
+  }
+  .instnav button {
+    font: inherit; font-size: 1rem; min-height: 38px; border: none; background: none;
+    color: var(--accent); cursor: pointer; border-radius: 10px;
+  }
+  .instnav button:disabled { color: var(--line); cursor: default; }
+  .instnav .where { text-align: center; font-size: .82rem; font-weight: 600; color: var(--ink2); }
+  .instnav .where b { color: var(--ink); font-weight: 700; }
+
+  .content { padding: 12px 18px 18px; display: flex; flex-direction: column; gap: 12px; }
+
+  .card {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 16px;
+    padding: 14px 16px;
+  }
+  button.card { font: inherit; text-align: left; width: 100%; cursor: pointer; color: inherit; }
+  .card .row1 { display: flex; justify-content: space-between; align-items: center; font-weight: 700; font-size: 1rem; }
+  .card .row1 .chev { color: var(--ink2); font-weight: 400; }
+  .card .meta { color: var(--ink2); font-size: .82rem; margin-top: 3px; font-variant-numeric: tabular-nums; }
+
+  .banner { background: var(--warn-bg); border: 1px solid transparent; border-radius: 16px; padding: 14px 16px; }
+  .banner .t { color: var(--warn-ink); font-weight: 700; font-size: .95rem; }
+  .banner .m { color: var(--warn-ink); font-size: .82rem; margin-top: 2px; opacity: .85; }
+  .banner .acts { display: flex; gap: 10px; margin-top: 12px; }
+
+  .btn {
+    font: inherit; font-weight: 600; font-size: .95rem;
+    min-height: 44px; padding: 0 16px; border-radius: 12px; cursor: pointer;
+    border: 1px solid var(--line); background: var(--surface); color: var(--ink);
+  }
+  .btn.primary { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+  .btn.primary:active { background: var(--accent-press); }
+  .btn.quiet { background: none; border: none; color: var(--accent); min-height: 40px; }
+  .btn.danger-quiet { background: none; border: none; color: var(--danger); min-height: 40px; }
+  .btn.block { width: 100%; }
+
+  .exercise { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; overflow: hidden; }
+  .exercise .head {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 12px 16px 8px;
+  }
+  .exercise .head .name {
+    font-size: .78rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+  }
+  .exercise .head .rm {
+    font: inherit; border: none; background: none; color: var(--ink2); cursor: pointer;
+    font-size: 1.1rem; line-height: 1; padding: 4px 6px;
+  }
+  .sethead, .setrow {
+    display: grid; grid-template-columns: 34px 1fr 1fr 52px; align-items: center;
+    gap: 8px; padding: 4px 16px;
+  }
+  .sethead { color: var(--ink2); font-size: .68rem; letter-spacing: .06em; text-transform: uppercase; }
+  .sethead span:nth-child(2), .sethead span:nth-child(3) { text-align: center; }
+  .sethead span:last-child { text-align: center; }
+  .setrow { padding: 5px 16px; }
+  .setrow .n { color: var(--ink2); font-size: .85rem; font-variant-numeric: tabular-nums; }
+  .setrow input {
+    font: inherit; font-size: 1.05rem; font-weight: 600; font-variant-numeric: tabular-nums;
+    text-align: center; width: 100%; min-height: 42px;
+    border: 1px solid var(--line); border-radius: 10px;
+    background: var(--surface2); color: var(--ink);
+  }
+  .setrow input:disabled { background: none; border-color: transparent; }
+  .check {
+    width: 30px; height: 30px; border-radius: 999px; margin: 0 auto;
+    border: 2px solid var(--line); background: var(--surface2);
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    color: transparent; font-size: .85rem; padding: 0;
+  }
+  .check.on { background: var(--good); border-color: var(--good); color: #fff; }
+  .exercise .foot { padding: 4px 8px 8px; }
+
+  .ro-list { padding: 12px 16px 14px; display: flex; flex-direction: column; gap: 6px; }
+  .ro-set { font-variant-numeric: tabular-nums; font-size: .95rem; color: var(--ink); }
+  .ro-set .idx { color: var(--ink2); display: inline-block; width: 1.5em; }
+
+  .footer-cta {
+    position: sticky; bottom: 0; padding: 12px 18px 14px;
+    background: linear-gradient(transparent, var(--bg) 35%);
+  }
+
+  .selectrow { display: flex; gap: 10px; }
+  .selectrow select {
+    flex: 1; font: inherit; font-size: .92rem; font-weight: 600; min-height: 42px;
+    border: 1px solid var(--line); border-radius: 12px; background: var(--surface);
+    color: var(--ink); padding: 0 10px;
+  }
+
+  .histrow {
+    display: flex; justify-content: space-between; align-items: center;
+    width: 100%; font: inherit; color: inherit; cursor: pointer;
+    background: var(--surface); border: 1px solid var(--line); border-radius: 14px;
+    padding: 13px 16px; font-variant-numeric: tabular-nums;
+  }
+  .histrow .d { font-weight: 700; }
+  .histrow .m { color: var(--ink2); font-size: .82rem; }
+
+  .tabs {
+    flex-shrink: 0; display: flex; border-top: 1px solid var(--line);
+    background: var(--surface); padding: 6px 8px 2px;
+  }
+  .tabs button {
+    flex: 1; font: inherit; font-size: .72rem; font-weight: 600; color: var(--ink2);
+    background: none; border: none; cursor: pointer; padding: 6px 0 4px;
+    display: flex; flex-direction: column; align-items: center; gap: 2px;
+  }
+  .tabs button .ic { font-size: 1.15rem; line-height: 1; }
+  .tabs button.on { color: var(--accent); }
+
+  .summary-hero { text-align: center; padding: 26px 0 4px; }
+  .summary-hero .big { font-size: 1.5rem; font-weight: 800; letter-spacing: -.02em; }
+  .summary-hero .sub { color: var(--ink2); margin-top: 4px; font-variant-numeric: tabular-nums; }
+  .statline {
+    display: flex; justify-content: space-between; padding: 9px 2px;
+    border-bottom: 1px solid var(--line); font-size: .92rem; font-variant-numeric: tabular-nums;
+  }
+  .statline:last-child { border-bottom: none; }
+  .statline .k { color: var(--ink2); }
+  .statline .v { font-weight: 600; }
+
+  .note { color: var(--ink2); font-size: .8rem; line-height: 1.5; padding: 0 4px; }
+
+  .seedrow {
+    display: flex; align-items: center; gap: 10px;
+    background: var(--surface); border: 1px solid var(--line); border-radius: 14px;
+    padding: 11px 14px;
+  }
+  .seedrow .grip { color: var(--ink2); cursor: grab; }
+  .seedrow .nm { flex: 1; font-weight: 600; font-size: .95rem; }
+  .seedrow .scheme { color: var(--ink2); font-size: .85rem; font-variant-numeric: tabular-nums; }
+  .seedrow .del { font: inherit; border: none; background: none; color: var(--danger); cursor: pointer; font-size: 1rem; padding: 4px; }
+  .field label { display: block; font-size: .72rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--ink2); margin-bottom: 6px; }
+  .field input {
+    width: 100%; font: inherit; font-size: 1rem; font-weight: 600; min-height: 44px;
+    border: 1px solid var(--line); border-radius: 12px; background: var(--surface);
+    color: var(--ink); padding: 0 14px;
+  }
+
+  .chartbox { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 16px 12px 8px; }
+  .chartbox .cap { font-size: .72rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--ink2); padding: 0 6px 8px; }
+  .chartbox svg { width: 100%; height: auto; display: block; }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .screen .content { animation: slidein .18s ease-out; }
+    @keyframes slidein { from { opacity: 0; transform: translateX(10px); } to { opacity: 1; transform: none; } }
+  }
+</style>
+
+<div class="stage">
+  <header class="stage-head">
+    <h1>Laura — workout tracker</h1>
+    <p>Clickable mockup for sign-off · fake data, nothing is saved · tap through the real funnel or jump to any screen below.</p>
+  </header>
+  <nav class="jump" id="jump" aria-label="Jump to screen"></nav>
+  <div class="phone">
+    <div class="viewport">
+      <div class="notch" aria-hidden="true"></div>
+      <div class="statusbar" aria-hidden="true"><span>18:03</span><span>▦ ᯤ ▮85%</span></div>
+      <main class="screen" id="screen"></main>
+      <div id="tabslot"></div>
+      <div class="homebar" aria-hidden="true"><i></i></div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ------------------------------------------------------------------ */
+/* Fake dataset: completed history per routine (oldest -> newest).     */
+/* ------------------------------------------------------------------ */
+const HISTORY = {
+  'push-day': [
+    { date: 'Jun 3',  exercises: [
+      { name: 'Bench Press', sets: [[8,55],[8,55],[6,57.5]] },
+      { name: 'Incline DB Press', sets: [[10,22],[10,22]] },
+      { name: 'Cable Fly', sets: [[12,12.5],[12,12.5],[12,12.5]] },
+      { name: 'Overhead Press', sets: [[10,30],[8,30]] },
+    ]},
+    { date: 'Jun 17', exercises: [
+      { name: 'Bench Press', sets: [[8,57.5],[8,57.5],[6,60]] },
+      { name: 'Incline DB Press', sets: [[10,22],[10,24]] },
+      { name: 'Cable Fly', sets: [[12,12.5],[12,15],[12,15]] },
+      { name: 'Overhead Press', sets: [[10,30],[8,32.5]] },
+    ]},
+    { date: 'Jul 3',  exercises: [
+      { name: 'Bench Press', sets: [[8,60],[8,60],[5,62.5]] },
+      { name: 'Incline DB Press', sets: [[10,24],[10,24]] },
+      { name: 'Cable Fly', sets: [[12,15],[12,15],[12,15]] },
+      { name: 'Overhead Press', sets: [[10,32.5],[8,32.5]] },
+      { name: 'Triceps Pushdown', sets: [[12,20],[12,20]] },
+    ]},
+    { date: 'Jul 7',  exercises: [
+      { name: 'Bench Press', sets: [[8,60],[8,60],[6,62.5]] },
+      { name: 'Incline DB Press', sets: [[10,24],[10,24]] },
+      { name: 'Cable Fly', sets: [[12,15],[12,15],[12,17.5]] },
+      { name: 'Overhead Press', sets: [[10,32.5],[9,32.5]] },
+      { name: 'Triceps Pushdown', sets: [[12,20],[12,22.5]] },
+    ]},
+    { date: 'Jul 10', exercises: [
+      { name: 'Bench Press', sets: [[8,60],[8,60],[6,65]] },
+      { name: 'Incline DB Press', sets: [[10,24],[10,24]] },
+      { name: 'Cable Fly', sets: [[12,15],[12,17.5],[12,17.5]] },
+      { name: 'Overhead Press', sets: [[10,32.5],[10,32.5]] },
+      { name: 'Triceps Pushdown', sets: [[12,22.5],[12,22.5]] },
+    ]},
+  ],
+  'pull-day': [
+    { date: 'Jun 30', exercises: [
+      { name: 'Deadlift', sets: [[5,100],[5,100],[3,110]] },
+      { name: 'Lat Pulldown', sets: [[10,50],[10,50],[8,55]] },
+      { name: 'Seated Row', sets: [[10,45],[10,45]] },
+      { name: 'Biceps Curl', sets: [[12,12],[12,12]] },
+    ]},
+    { date: 'Jul 8',  exercises: [
+      { name: 'Deadlift', sets: [[5,105],[5,105],[3,112.5]] },
+      { name: 'Lat Pulldown', sets: [[10,52.5],[10,52.5],[8,55]] },
+      { name: 'Seated Row', sets: [[10,45],[10,47.5]] },
+      { name: 'Biceps Curl', sets: [[12,12],[12,14]] },
+    ]},
+  ],
+  'legs': [
+    { date: 'Jul 4',  exercises: [
+      { name: 'Back Squat', sets: [[6,80],[6,80],[5,85]] },
+      { name: 'Leg Press', sets: [[10,140],[10,140]] },
+      { name: 'Romanian Deadlift', sets: [[8,70],[8,70]] },
+      { name: 'Calf Raise', sets: [[15,60],[15,60],[15,60]] },
+    ]},
+    { date: 'Jul 11', exercises: [
+      { name: 'Back Squat', sets: [[6,82.5],[6,82.5],[5,85]] },
+      { name: 'Leg Press', sets: [[10,145],[10,145]] },
+      { name: 'Romanian Deadlift', sets: [[8,72.5],[8,72.5]] },
+      { name: 'Calf Raise', sets: [[15,60],[15,65],[15,65]] },
+    ]},
+  ],
+};
+const ROUTINES = [
+  { slug: 'push-day', name: 'Push Day' },
+  { slug: 'pull-day', name: 'Pull Day' },
+  { slug: 'legs',     name: 'Legs' },
+];
+const rname = s => ROUTINES.find(r => r.slug === s).name;
+const setCount = sess => sess.exercises.reduce((n, e) => n + e.sets.length, 0);
+
+/* ------------------------------------------------------------------ */
+/* Mock state                                                          */
+/* ------------------------------------------------------------------ */
+const state = {
+  screen: 'home',
+  resume: { slug: 'legs', started: 'Jul 13, 19:02' },  // abandoned session banner
+  live: null,          // in-progress session being edited
+  peekIdx: null,       // index into HISTORY[live.slug] when peeking
+  detail: null,        // { slug, idx } for read-only history detail
+  histFilter: 'push-day',
+  chart: { slug: 'push-day', ex: 'Bench Press' },
+  sync: 'synced',      // synced | pending | syncing
+  editor: {
+    name: 'Push Day',
+    rows: [
+      { nm: 'Bench Press', sets: 3, reps: 8, w: 60 },
+      { nm: 'Incline DB Press', sets: 3, reps: 10, w: 24 },
+      { nm: 'Cable Fly', sets: 3, reps: 12, w: 15 },
+    ],
+  },
+};
+
+function startSession(slug) {
+  const last = HISTORY[slug][HISTORY[slug].length - 1];
+  state.live = {
+    slug, name: rname(slug), date: 'Jul 14',
+    exercises: last.exercises.map(e => ({
+      name: e.name,
+      sets: e.sets.map(([reps, w]) => ({ reps, w, done: false })),
+    })),
+  };
+  state.peekIdx = null;
+  go('session');
+}
+
+/* ------------------------------------------------------------------ */
+/* Screen renderers                                                    */
+/* ------------------------------------------------------------------ */
+const syncPill = () => ({
+  synced:  '<button class="pill good" onclick="fakeSync()">☁︎ ✓ synced</button>',
+  pending: '<button class="pill warn" onclick="fakeSync()">☁︎ 1 pending</button>',
+  syncing: '<span class="pill">☁︎ ⟳ syncing…</span>',
+}[state.sync]);
+
+function renderHome() {
+  const cards = ROUTINES.map(r => {
+    const h = HISTORY[r.slug];
+    const last = h[h.length - 1];
+    return `<button class="card" onclick="startSession('${r.slug}')">
+      <div class="row1"><span>${r.name}</span><span class="chev">›</span></div>
+      <div class="meta">last done ${last.date} · ${last.exercises.length} exercises</div>
+    </button>`;
+  }).join('');
+  const banner = state.resume ? `
+    <div class="banner">
+      <div class="t">⚠ ${rname(state.resume.slug)} — in progress</div>
+      <div class="m">started ${state.resume.started}</div>
+      <div class="acts">
+        <button class="btn primary" style="flex:1" onclick="resumeSession()">Resume</button>
+        <button class="btn" style="flex:1" onclick="discardSession()">Discard</button>
+      </div>
+    </div>` : '';
+  return {
+    bar: `<div class="appbar"><span></span><span class="title">Workouts</span>${syncPill()}</div>`,
+    body: `<div class="content">${banner}${cards}
+      <button class="btn quiet" onclick="go('editor')">＋ New routine</button></div>`,
+    tabs: 'home',
+  };
+}
+
+function renderSession() {
+  const hist = HISTORY[state.live.slug];
+  const prev = hist[hist.length - 1];
+  const sections = state.live.exercises.map((e, ei) => {
+    const rows = e.sets.map((s, si) => `
+      <div class="setrow">
+        <span class="n">${si + 1}</span>
+        <input inputmode="numeric" value="${s.reps}" aria-label="reps"
+               onchange="editSet(${ei},${si},'reps',this.value)">
+        <input inputmode="decimal" value="${s.w}" aria-label="weight kg"
+               onchange="editSet(${ei},${si},'w',this.value)">
+        <button class="check ${s.done ? 'on' : ''}" aria-label="set done"
+                onclick="toggleDone(${ei},${si})">✓</button>
+      </div>`).join('');
+    return `<section class="exercise">
+      <div class="head"><span class="name">${e.name}</span>
+        <button class="rm" title="Remove exercise" onclick="removeEx(${ei})">✕</button></div>
+      <div class="sethead"><span>set</span><span>reps</span><span>kg</span><span>done</span></div>
+      ${rows}
+      <div class="foot"><button class="btn quiet" onclick="addSet(${ei})">＋ add set</button></div>
+    </section>`;
+  }).join('');
+  return {
+    bar: `<div class="appbar">
+        <button class="backbtn" onclick="go('home')">‹ Back</button>
+        <span class="title">${state.live.name}</span><span></span>
+        <span class="sub">Today · ${state.live.date}</span>
+      </div>
+      <div class="instnav">
+        <button onclick="peekStart()" title="Previous instance">◀</button>
+        <span class="where"><b>live session</b> · ◀ ${prev.date}</span>
+        <button disabled>▶</button>
+      </div>`,
+    body: `<div class="content">${sections}
+        <button class="btn quiet" onclick="addEx()">＋ add exercise</button>
+      </div>
+      <div class="footer-cta"><button class="btn primary block" onclick="markDone()">✓ Mark workout done</button></div>`,
+    tabs: null,
+  };
+}
+
+function renderReadOnly(sess) {
+  return sess.exercises.map(e => `
+    <section class="exercise">
+      <div class="head"><span class="name">${e.name}</span></div>
+      <div class="ro-list">${e.sets.map((s, i) =>
+        `<div class="ro-set"><span class="idx">${i + 1}</span>· ${s[0]} × ${s[1]} kg</div>`).join('')}
+      </div>
+    </section>`).join('');
+}
+
+function renderPeek() {
+  const hist = HISTORY[state.live.slug];
+  const i = state.peekIdx, sess = hist[i];
+  return {
+    bar: `<div class="appbar">
+        <button class="backbtn" onclick="go('session',()=>state.peekIdx=null)">‹ Back</button>
+        <span class="title">${state.live.name}</span><span></span>
+        <span class="sub" style="color:var(--warn-ink);font-weight:700">${sess.date} — read only</span>
+      </div>
+      <div class="instnav" style="background:var(--warn-bg);border-color:transparent">
+        <button onclick="peekMove(-1)" ${i === 0 ? 'disabled' : ''}>◀</button>
+        <span class="where"><b>${sess.date}</b>${i > 0 ? ' · ◀ ' + hist[i - 1].date : ''}</span>
+        <button onclick="peekMove(1)">▶</button>
+      </div>`,
+    body: `<div class="content">${renderReadOnly(sess)}</div>
+      <div class="footer-cta"><button class="btn block" onclick="go('session',()=>state.peekIdx=null)">▶ Back to today’s workout</button></div>`,
+    tabs: null,
+  };
+}
+
+function renderSummary() {
+  const done = state.live.exercises
+    .map(e => ({ ...e, sets: e.sets.filter(s => s.done) }))
+    .filter(e => e.sets.length);
+  const nSets = done.reduce((n, e) => n + e.sets.length, 0);
+  const lines = done.map(e => {
+    const top = e.sets.reduce((a, b) => (+b.w > +a.w ? b : a));
+    return `<div class="statline"><span class="k">${e.name}</span><span class="v">${top.reps} × ${top.w} kg top set</span></div>`;
+  }).join('');
+  return {
+    bar: `<div class="appbar"><span></span><span class="title">${state.live.name} ✓</span>${syncPill()}
+      <span class="sub">Jul 14 · 49 min</span></div>`,
+    body: `<div class="content">
+        <div class="summary-hero">
+          <div class="big">${done.length} exercises · ${nSets} sets</div>
+          <div class="sub">Session is frozen — history is append-only.</div>
+        </div>
+        <div class="card">${lines || '<div class="note">No sets were checked off.</div>'}</div>
+        <p class="note">${state.sync === 'synced'
+          ? 'Saved to this phone and to your Google Drive as a readable sheet.'
+          : 'Saved on this phone. Will sync to your Google Drive automatically when you’re back online.'}</p>
+      </div>
+      <div class="footer-cta"><button class="btn primary block" onclick="go('home',()=>state.live=null)">Back to workouts</button></div>`,
+    tabs: null,
+  };
+}
+
+function renderHistory() {
+  const hist = [...HISTORY[state.histFilter]].reverse();
+  const rows = hist.map((s, ri) => {
+    const idx = hist.length - 1 - ri;
+    return `<button class="histrow" onclick="openDetail('${state.histFilter}',${idx})">
+      <span class="d">${s.date}</span>
+      <span class="m">${s.exercises.length} exercises · ${setCount(s)} sets &nbsp;›</span>
+    </button>`;
+  }).join('');
+  const opts = ROUTINES.map(r =>
+    `<option value="${r.slug}" ${r.slug === state.histFilter ? 'selected' : ''}>${r.name}</option>`).join('');
+  return {
+    bar: `<div class="appbar"><span></span><span class="title">History</span><span></span></div>`,
+    body: `<div class="content">
+      <div class="selectrow"><select onchange="state.histFilter=this.value;draw()" aria-label="Routine">${opts}</select></div>
+      ${rows}</div>`,
+    tabs: 'history',
+  };
+}
+
+function renderDetail() {
+  const { slug, idx } = state.detail;
+  const hist = HISTORY[slug], sess = hist[idx];
+  return {
+    bar: `<div class="appbar">
+        <button class="backbtn" onclick="go('history')">‹ History</button>
+        <span class="title">${rname(slug)}</span><span></span>
+        <span class="sub">${sess.date} · frozen</span>
+      </div>
+      <div class="instnav">
+        <button onclick="detailMove(-1)" ${idx === 0 ? 'disabled' : ''}>◀</button>
+        <span class="where"><b>${sess.date}</b></span>
+        <button onclick="detailMove(1)" ${idx === hist.length - 1 ? 'disabled' : ''}>▶</button>
+      </div>`,
+    body: `<div class="content">${renderReadOnly(sess)}</div>`,
+    tabs: null,
+  };
+}
+
+function renderCharts() {
+  const { slug, ex } = state.chart;
+  const exNames = [...new Set(HISTORY[slug].flatMap(s => s.exercises.map(e => e.name)))];
+  const exSel = exNames.includes(ex) ? ex : exNames[0];
+  const pts = HISTORY[slug]
+    .map(s => {
+      const e = s.exercises.find(e2 => e2.name === exSel);
+      return e ? { date: s.date, top: Math.max(...e.sets.map(st => st[1])) } : null;
+    }).filter(Boolean);
+  const ropts = ROUTINES.map(r =>
+    `<option value="${r.slug}" ${r.slug === slug ? 'selected' : ''}>${r.name}</option>`).join('');
+  const eopts = exNames.map(n =>
+    `<option ${n === exSel ? 'selected' : ''}>${n}</option>`).join('');
+  return {
+    bar: `<div class="appbar"><span></span><span class="title">Progress</span><span></span></div>`,
+    body: `<div class="content">
+      <div class="selectrow">
+        <select onchange="state.chart.slug=this.value;state.chart.ex='';draw()" aria-label="Routine">${ropts}</select>
+        <select onchange="state.chart.ex=this.value;draw()" aria-label="Exercise">${eopts}</select>
+      </div>
+      <div class="chartbox">
+        <div class="cap">${exSel} — top set weight (kg)</div>
+        ${lineChart(pts)}
+      </div>
+      <p class="note">One point per completed session. More metrics (volume, best reps) can come later — the history already holds the data.</p>
+    </div>`,
+    tabs: 'charts',
+  };
+}
+
+function lineChart(pts) {
+  const W = 320, H = 170, padL = 34, padR = 14, padT = 12, padB = 26;
+  if (pts.length < 2) return '<p class="note" style="padding:12px">Not enough sessions yet.</p>';
+  const ws = pts.map(p => p.top);
+  const lo = Math.floor(Math.min(...ws) / 5) * 5 - 2.5;
+  const hi = Math.ceil(Math.max(...ws) / 5) * 5 + 2.5;
+  const x = i => padL + (i / (pts.length - 1)) * (W - padL - padR);
+  const y = w => padT + (1 - (w - lo) / (hi - lo)) * (H - padT - padB);
+  const path = pts.map((p, i) => `${i ? 'L' : 'M'}${x(i).toFixed(1)},${y(p.top).toFixed(1)}`).join(' ');
+  const area = `${path} L${x(pts.length - 1).toFixed(1)},${H - padB} L${padL},${H - padB} Z`;
+  const gridVals = [lo + 2.5, (lo + hi) / 2, hi - 2.5];
+  const grid = gridVals.map(v => `
+    <line x1="${padL}" x2="${W - padR}" y1="${y(v).toFixed(1)}" y2="${y(v).toFixed(1)}" stroke="var(--line)" stroke-width="1"/>
+    <text x="${padL - 6}" y="${(y(v) + 3).toFixed(1)}" text-anchor="end" font-size="9" fill="var(--ink2)">${v}</text>`).join('');
+  const dots = pts.map((p, i) => `
+    <circle cx="${x(i).toFixed(1)}" cy="${y(p.top).toFixed(1)}" r="${i === pts.length - 1 ? 4 : 3}"
+      fill="${i === pts.length - 1 ? 'var(--accent)' : 'var(--surface)'}" stroke="var(--accent)" stroke-width="2"/>`).join('');
+  const labels = pts.map((p, i) => `
+    <text x="${x(i).toFixed(1)}" y="${H - 8}" text-anchor="middle" font-size="9" fill="var(--ink2)">${p.date}</text>`).join('');
+  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Weight over time">
+    ${grid}
+    <path d="${area}" fill="var(--accent)" opacity="0.08"/>
+    <path d="${path}" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round"/>
+    ${dots}${labels}
+  </svg>`;
+}
+
+function renderEditor() {
+  const rows = state.editor.rows.map((r, i) => `
+    <div class="seedrow">
+      <span class="grip" aria-hidden="true">≡</span>
+      <span class="nm">${r.nm}</span>
+      <span class="scheme">${r.sets} × ${r.reps} @ ${r.w} kg</span>
+      <button class="del" title="Remove" onclick="state.editor.rows.splice(${i},1);draw()">✕</button>
+    </div>`).join('');
+  return {
+    bar: `<div class="appbar">
+      <button class="backbtn" onclick="go('home')">‹ Back</button>
+      <span class="title">Edit routine</span><span></span></div>`,
+    body: `<div class="content">
+      <div class="field"><label for="rn">Name</label>
+        <input id="rn" value="${state.editor.name}" onchange="state.editor.name=this.value"></div>
+      <div class="field"><label>Exercises — first-time template</label></div>
+      ${rows}
+      <button class="btn quiet" onclick="state.editor.rows.push({nm:'New exercise',sets:3,reps:8,w:0});draw()">＋ add exercise</button>
+      <p class="note">ⓘ Used only for the very first session of this routine. After that, every workout starts from a copy of the previous one — including any exercises you added or dropped along the way.</p>
+    </div>
+    <div class="footer-cta"><button class="btn primary block" onclick="go('home')">Save routine</button></div>`,
+    tabs: null,
+  };
+}
+
+/* ------------------------------------------------------------------ */
+/* Actions                                                             */
+/* ------------------------------------------------------------------ */
+function go(screen, fx) { if (fx) fx(); state.screen = screen; draw(); }
+function resumeSession() { const s = state.resume.slug; state.resume = null; startSession(s); }
+function discardSession() { state.resume = null; draw(); }
+function toggleDone(ei, si) { const s = state.live.exercises[ei].sets[si]; s.done = !s.done; draw(); }
+function editSet(ei, si, k, v) { state.live.exercises[ei].sets[si][k] = v; }
+function addSet(ei) {
+  const sets = state.live.exercises[ei].sets;
+  const last = sets[sets.length - 1] || { reps: 8, w: 0 };
+  sets.push({ reps: last.reps, w: last.w, done: false });
+  draw();
+}
+function removeEx(ei) { state.live.exercises.splice(ei, 1); draw(); }
+function addEx() {
+  state.live.exercises.push({ name: 'New exercise', sets: [{ reps: 8, w: 0, done: false }] });
+  draw();
+  const sc = document.getElementById('screen');
+  sc.scrollTop = sc.scrollHeight;
+}
+function markDone() {
+  state.sync = 'syncing'; go('summary');
+  setTimeout(() => { state.sync = 'synced'; if (state.screen === 'summary') draw(); }, 1500);
+}
+function fakeSync() { state.sync = 'syncing'; draw(); setTimeout(() => { state.sync = 'synced'; draw(); }, 1200); }
+function peekStart() { state.peekIdx = HISTORY[state.live.slug].length - 1; go('peek'); }
+function peekMove(d) {
+  const n = state.peekIdx + d;
+  if (n >= HISTORY[state.live.slug].length) { state.peekIdx = null; go('session'); }
+  else if (n >= 0) { state.peekIdx = n; draw(); }
+}
+function openDetail(slug, idx) { state.detail = { slug, idx }; go('detail'); }
+function detailMove(d) {
+  const n = state.detail.idx + d;
+  if (n >= 0 && n < HISTORY[state.detail.slug].length) { state.detail.idx = n; draw(); }
+}
+
+/* ------------------------------------------------------------------ */
+/* Draw                                                                */
+/* ------------------------------------------------------------------ */
+const RENDER = {
+  home: renderHome, session: renderSession, peek: renderPeek, summary: renderSummary,
+  history: renderHistory, detail: renderDetail, charts: renderCharts, editor: renderEditor,
+};
+const JUMPS = [
+  ['home', 'Home'], ['session', 'Active session'], ['peek', 'Past peek'],
+  ['summary', 'Summary'], ['history', 'History'], ['detail', 'Detail'],
+  ['charts', 'Charts'], ['editor', 'Routine editor'],
+];
+function jumpTo(s) {
+  if ((s === 'session' || s === 'peek' || s === 'summary') && !state.live) startSession('push-day');
+  if (s === 'peek') state.peekIdx = HISTORY[state.live.slug].length - 1;
+  if (s === 'summary' && state.live) {
+    state.live.exercises.forEach(e => e.sets.forEach(st => st.done = true));
+    state.sync = 'synced';
+  }
+  if (s === 'detail' && !state.detail) state.detail = { slug: 'push-day', idx: HISTORY['push-day'].length - 1 };
+  go(s);
+}
+function draw() {
+  const r = RENDER[state.screen]();
+  document.getElementById('screen').innerHTML = r.bar + r.body;
+  document.getElementById('tabslot').innerHTML = r.tabs ? `
+    <nav class="tabs">
+      <button class="${r.tabs === 'home' ? 'on' : ''}" onclick="go('home')"><span class="ic">▤</span>Workouts</button>
+      <button class="${r.tabs === 'history' ? 'on' : ''}" onclick="go('history')"><span class="ic">≣</span>History</button>
+      <button class="${r.tabs === 'charts' ? 'on' : ''}" onclick="go('charts')"><span class="ic">📈</span>Progress</button>
+    </nav>` : '';
+  document.getElementById('jump').innerHTML = JUMPS.map(([s, label]) =>
+    `<button class="${state.screen === s ? 'on' : ''}" onclick="jumpTo('${s}')">${label}</button>`).join('');
+}
+draw();
+</script>

@@ -1,0 +1,27 @@
+{
+  "name": "workout-log",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "gen-icons": "node scripts/gen-icons.mjs"
+  },
+  "dependencies": {
+    "dexie": "^4.0.11",
+    "dexie-react-hooks": "^1.1.7",
+    "preact": "^10.25.4",
+    "wouter-preact": "^3.3.5"
+  },
+  "devDependencies": {
+    "@preact/preset-vite": "^2.9.4",
+    "fake-indexeddb": "^6.0.0",
+    "typescript": "~5.7.3",
+    "vite": "^6.1.0",
+    "vite-plugin-pwa": "^0.21.1",
+    "vitest": "^3.0.5"
+  }
+}
