@@ -39,7 +39,7 @@ export function Settings() {
           <input
             id="sname"
             value={profile?.name ?? ''}
-            onChange={(e) => {
+            onBlur={(e) => {
               const v = (e.currentTarget as HTMLInputElement).value.trim()
               if (v) saveProfile(v)
             }}

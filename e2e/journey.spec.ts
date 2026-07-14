@@ -86,6 +86,25 @@ test.describe('empty state → validated state', () => {
     await expect(page.locator('.check.on')).toHaveCount(0)
   })
 
+  test('typing a multi-digit number keeps focus and commits on blur', async ({ page }) => {
+    await firstRunSetup(page)
+    await createRoutine(page, 'Push Day', PUSH)
+    await routineCard(page, 'Push Day').click()
+
+    const reps = exercise(page, 0).getByLabel('reps').first()
+    await reps.click() // focus (select-all)
+    await reps.pressSequentially('12') // real keystrokes, digit by digit
+    await expect(reps).toBeFocused() // focus must survive every keystroke
+    await expect(reps).toHaveValue('12')
+    await reps.blur()
+
+    // committed to the DB: survives a reload + resume
+    await page.goto('./')
+    await page.reload()
+    await page.getByRole('button', { name: 'Resume' }).click()
+    await expect(exercise(page, 0).getByLabel('reps').first()).toHaveValue('12')
+  })
+
   test('in-progress workout survives reload; resume and discard both work', async ({ page }) => {
     await firstRunSetup(page)
     await createRoutine(page, 'Legs', [{ name: 'Back Squat', sets: 2, reps: 6, weight: 80 }])

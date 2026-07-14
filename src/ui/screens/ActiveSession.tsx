@@ -72,9 +72,9 @@ export function ActiveSession({ id }: { id: string }) {
                 class="exname"
                 value={e.name}
                 aria-label="Exercise name"
-                onChange={(ev) => {
+                onBlur={(ev) => {
                   const v = (ev.currentTarget as HTMLInputElement).value.trim()
-                  if (v) mut(renameExercise(ei, v))
+                  if (v && v !== e.name) mut(renameExercise(ei, v))
                 }}
               />
               <button
