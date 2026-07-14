@@ -2,6 +2,7 @@ import { useLiveQuery } from 'dexie-react-hooks'
 import { nav } from '../../app'
 import { db } from '../../db/db'
 import { SessionView } from '../components/SessionView'
+import { SyncBadge } from '../components/SyncBadge'
 import { fmtDate, fmtDuration, setCount } from '../format'
 
 export function Summary({ id }: { id: string }) {
@@ -16,6 +17,7 @@ export function Summary({ id }: { id: string }) {
     <>
       <div class="appbar">
         <span class="title">{session.routineName} ✓</span>
+        <SyncBadge />
         <span class="sub">
           {fmtDate(session.date)} · {fmtDuration(session.startedAt, session.completedAt)}
         </span>
@@ -41,7 +43,9 @@ export function Summary({ id }: { id: string }) {
           })}
         </div>
         <SessionView session={session} />
-        <p class="note">Saved on this phone. Google Drive sync arrives in the next milestone.</p>
+        <p class="note">
+          Saved on this phone. With Google Drive connected, it also lands in your Drive as a readable spreadsheet.
+        </p>
       </div>
       <div class="footer-cta">
         <button class="btn primary block" onClick={() => nav('/')}>

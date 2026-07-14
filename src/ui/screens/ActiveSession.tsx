@@ -14,6 +14,7 @@ import {
   updateSet,
   type SessionMut,
 } from '../../domain/session'
+import { requestSync } from '../../sync/engine'
 import { useWakeLock } from '../../hooks/useWakeLock'
 import { InstNav } from '../components/InstNav'
 import { NumberField } from '../components/NumberField'
@@ -46,6 +47,7 @@ export function ActiveSession({ id }: { id: string }) {
 
   const finish = async () => {
     await markDone(id)
+    void requestSync()
     nav(`/celebrate/${id}`)
   }
 

@@ -5,6 +5,7 @@ import type { Routine } from '../../db/types'
 import { discardSession, startSession } from '../../domain/session'
 import { useProfile } from '../../hooks/useProfile'
 import { fmtDate } from '../format'
+import { SyncBadge } from '../components/SyncBadge'
 import { Tabs } from '../components/Tabs'
 
 export function PickWorkout() {
@@ -29,7 +30,11 @@ export function PickWorkout() {
   return (
     <>
       <div class="appbar">
+        <button class="backbtn" aria-label="Settings" onClick={() => nav('/settings')}>
+          ⚙
+        </button>
         <span class="title">Workouts</span>
+        <SyncBadge />
         {profile && <span class="sub">{profile.name}</span>}
       </div>
       <div class="content">

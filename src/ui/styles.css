@@ -82,6 +82,8 @@ button:focus-visible, input:focus-visible, select:focus-visible {
   color: var(--ink2); white-space: nowrap; font-family: inherit;
 }
 .pill.good { color: var(--good); border-color: transparent; background: var(--good-bg); }
+.pill.warn2 { color: var(--warn-ink); border-color: transparent; background: var(--warn-bg); }
+button.pill { cursor: pointer; }
 
 .instnav {
   margin: 8px 18px 0;

@@ -9,6 +9,7 @@ import { Peek } from './ui/screens/Peek'
 import { PickWorkout } from './ui/screens/PickWorkout'
 import { ProfileSetup } from './ui/screens/ProfileSetup'
 import { RoutineEditor } from './ui/screens/RoutineEditor'
+import { Settings } from './ui/screens/Settings'
 import { SessionDetail } from './ui/screens/SessionDetail'
 import { Summary } from './ui/screens/Summary'
 
@@ -36,6 +37,7 @@ export function App() {
           <Route path="/session/:id">{(p) => <ActiveSession id={p!.id} />}</Route>
           <Route path="/celebrate/:id">{(p) => <Celebrate id={p!.id} />}</Route>
           <Route path="/summary/:id">{(p) => <Summary id={p!.id} />}</Route>
+          <Route path="/settings">{() => <Settings />}</Route>
           <Route path="/history">{() => <History />}</Route>
           <Route path="/detail/:id">{(p) => <SessionDetail id={p!.id} />}</Route>
           <Route path="/charts">{() => <Charts />}</Route>
